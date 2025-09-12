@@ -1,0 +1,18 @@
+{
+  "name": "hw-js-y4",
+  "version": "1.0.0",
+  "description": "Homework for JS practice of 4 year of studying",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node script.js"
+  },
+  "keywords": [
+    "homework"
+  ],
+  "author": "M",
+  "license": "ISC",
+  "dependencies": {
+    "moment": "^2.30.1"
+  }
+}
