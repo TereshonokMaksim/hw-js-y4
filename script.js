@@ -26,5 +26,15 @@ function getDate(){
     return date
 }
 
+function getCurrentWeekday(number){
+    if (number){
+        return momentModule().day()
+    }   
+    else{
+        return getCurrentDay()
+    } 
+}
+
 // console.log(`Today is ${getCurrentDay()}, ${getCurrentMonth()}, ${getCurrentYear()} year`) // TASK 1 MODULE 1
-console.log(getDate()) // TASK 2 MODULE 1
+// console.log(getDate()) // TASK 2 MODULE 1
+console.log(`Number ver: ${getCurrentWeekday(true)}\nWord ver: ${getCurrentWeekday(false)}`) // TASK 3 MODULE 1
