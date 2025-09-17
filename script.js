@@ -1,5 +1,5 @@
-// To run file, write "npm run start" in terminal
-// Чтобы запустить этот файл, напишите "npm run start" в командную строку
+// This file is now reserved for functions
+// Этот файл теперь зарезервирован для функций
 
 const momentModule = require("moment");
 
@@ -35,6 +35,11 @@ function getCurrentWeekday(number){
     } 
 }
 
+
 // console.log(`Today is ${getCurrentDay()}, ${getCurrentMonth()}, ${getCurrentYear()} year`) // TASK 1 MODULE 1
 // console.log(getDate()) // TASK 2 MODULE 1
-console.log(`Number ver: ${getCurrentWeekday(true)}\nWord ver: ${getCurrentWeekday(false)}`) // TASK 3 MODULE 1
+// console.log(`Number ver: ${getCurrentWeekday(true)}\nWord ver: ${getCurrentWeekday(false)}`) // TASK 3 MODULE 1
+
+module.exports = {
+    getDate: getDate
+}
