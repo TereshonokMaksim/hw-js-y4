@@ -15,5 +15,5 @@ server.listen(PORT, HOST, () => {
 });
 
 server.get("/timestamp", (request, response) => {
-    response.send(dateMod.getDate())
+    response.json(dateMod.getDate())
 });
