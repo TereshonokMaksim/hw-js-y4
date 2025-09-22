@@ -2,6 +2,8 @@
 // Чтобы запустить этот файл, напишите "npm start" в командную строку
 
 const express = require("express");
+const FS = require("fs");
+const pathModule = require("path");
 const dateMod = require('./script.js');
 
 const server = express();
@@ -9,11 +11,17 @@ const server = express();
 const HOST = "localhost";
 const PORT = "8000";
 
-server.listen(PORT, HOST, () => {
-    console.log(`Server is on ${HOST}:${PORT}/`);
-    console.log(`Link for testing: ${HOST}:${PORT}/timestamp`);
+const DATA_FILE_PATH = pathModule.join(__dirname, "data.json");
+
+server.get("/posts", (request, response) => {
+    response.json(JSON.parse(FS.readFileSync(DATA_FILE_PATH, "utf-8")))
 });
 
 server.get("/timestamp", (request, response) => {
     response.json(dateMod.getDate())
+});
+
+server.listen(PORT, HOST, () => {
+    console.log(`Server is on ${HOST}:${PORT}/`);
+    console.log(`Link for testing: ${HOST}:${PORT}/timestamp`);
 });
