@@ -23,5 +23,6 @@ server.get("/timestamp", (request, response) => {
 
 server.listen(PORT, HOST, () => {
     console.log(`Server is on ${HOST}:${PORT}/`);
-    console.log(`Link for testing: ${HOST}:${PORT}/timestamp`);
+    console.log(`Link for timestamp (Mod1 Task4): ${HOST}:${PORT}/timestamp`);
+    console.log(`Link for all posts (Mod1 Task5): ${HOST}:${PORT}/posts`);
 });
