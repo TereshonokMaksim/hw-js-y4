@@ -724,5 +724,12 @@
         "description": "Guys, i found some rocks, do not check 'em out.",
         "image": "https://bunny-wp-pullzone-oaxdht8z82.b-cdn.net/wp-content/uploads/2017/01/Gold_in_Granite__Plutonic_Rocks.png",
         "likes": 0
+    },
+    {
+        "id": 104,
+        "name": "Rock",
+        "description": "Guys, i found some rocks, do not check 'em out.",
+        "image": "https://bunny-wp-pullzone-oaxdht8z82.b-cdn.net/wp-content/uploads/2017/01/Gold_in_Granite__Plutonic_Rocks.png",
+        "likes": 0
     }
 ]

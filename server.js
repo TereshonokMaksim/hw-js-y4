@@ -6,7 +6,6 @@ const FS = require("fs");
 const FSPromises = require("fs/promises");
 const pathModule = require("path");
 const dateMod = require('./script.js');
-const { get } = require("http");
 
 const server = express();
 server.use(express.json());
@@ -21,7 +20,6 @@ server.get("/posts", (request, response) => {
     console.log(`Posts request GET, query:`);
     let responseData = [...postsData];
     let query = request.query;
-    console.log()
     if (query.skip){
         if (isNaN(Number(query.skip))){
             response.status(400).json("Bad 'skip' parameter, requires INTEGER data type.");
@@ -58,20 +56,22 @@ server.get("/timestamp", (request, response) => {
 });
 
 function getId(){
-    let supposedId = postsData.length
-    while (postsData.find((post) => supposedId == post.id)){
-        supposedId++
+    let supposedId = 0
+    for (let post of postsData){
+        if (post.id > supposedId){
+            supposedId = post.id
+        }
     }
     return supposedId
 }
 
-function URLCheck(str){
+function isURL(str){
     try{
         new URL(str);
-        return 1
+        return true
     }
     catch{
-        return 0
+        return false
     }
 }
 
@@ -79,7 +79,7 @@ async function updateJSON(){
     try {
         const cookedData = JSON.stringify(postsData, null, 4);
         await FSPromises.writeFile(DATA_FILE_PATH, cookedData);
-        return 0
+        return false
     }
     catch (error) {
         console.log(`During updating JSON file, server encountered something, that it should have never ecnountered: \n\n${error}`)
@@ -97,7 +97,7 @@ server.post("/posts", async (request, response) => {
         response.status(422).json("Check that you are sending 'name', 'image' and 'description' for post creation.");
         return
     }
-    if (!URLCheck(data.image)){
+    if (!isURL(data.image)){
         response.status(422).json("Image should a link to said image.");
         return
     }
@@ -109,7 +109,7 @@ server.post("/posts", async (request, response) => {
             response.status(500).json("Post save failed for some reason, contact devs immediatly and get free air.");
             return
         }
-        response.status(200).json(newPost);
+        response.status(201).json(newPost);
     }
     catch (error){
         response.status(500).json("Post creation failed for unexplainable reason, report to devs and get free coffee.");
