@@ -62,7 +62,7 @@ function getId(){
             supposedId = post.id
         }
     }
-    return supposedId
+    return supposedId + 1
 }
 
 function isURL(str){
