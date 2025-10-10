@@ -1,11 +1,11 @@
-const FS = require("fs");
-const FSPromises = require("fs/promises");
-const pathModule = require("path");
-const momentModule = require("moment");
+import FS from "fs";
+import FSPromises from "fs/promises";
+import pathModule from "path";
+import momentModule from "moment";
 
 
-const DATA_FILE_PATH = pathModule.join(__dirname, "..", "data.json");
-const postsData = JSON.parse(FS.readFileSync(DATA_FILE_PATH, "utf-8"));
+const DATA_FILE_PATH: string = pathModule.join(__dirname, "..", "data.json");
+const postsData: {id: number, name: string, description: string, image: string, likes: number}[] = JSON.parse(FS.readFileSync(DATA_FILE_PATH, "utf-8"));
 
 export const PostService = {
     getAllPosts(take?: number | string, skip?: number | string){
