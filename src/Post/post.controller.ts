@@ -1,8 +1,9 @@
-const PostService = require("./post.service")
+import { PostService } from "./post.service";
+import { Request, Response } from "express";
 
-const PostController = {
-    getAllPosts(request, response) {
-        let query = request.query;
+export const PostController = {
+    getAllPosts(request: Request, response: Response) {
+        let query: {take?: string, skip?: string} = request.query;
         if (query.skip){
             if (isNaN(Number(query.skip))){
                 response.status(400).json("Bad 'skip' parameter, requires INTEGER data type.");
@@ -25,8 +26,12 @@ const PostController = {
         }
         response.status(200).json(PostService.getAllPosts(query.take, query.skip));
     },
-    getPostById(request, response) {
-        const id = +request.params.id;
+    getPostById(request: Request, response: Response) {
+        if (!request.params.id){
+            response.status(400).json("Bad ID, there is no ID... what.")
+            return
+        }
+        const id: number = +request.params.id;
         if (isNaN(id)){
             response.status(400).json("Bad ID, requires INTEGER data type.");
             return
@@ -38,10 +43,10 @@ const PostController = {
         }
         response.status(200).json(post);
     },
-    getTimestamp(request, response) {
+    getTimestamp(request: Request, response: Response) {
         response.json(PostService.getDate());
     },
-    async createPost(request, response) {
+    async createPost(request: Request, response: Response) {
         if (!request.body){
             response.status(422).json("Request body is required.");
             return
@@ -70,5 +75,3 @@ const PostController = {
         }
     }
 }
-
-module.exports = PostController;

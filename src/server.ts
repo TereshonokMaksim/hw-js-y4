@@ -1,8 +1,8 @@
 // To run file, write "npm start" in terminal
 // Чтобы запустить этот файл, напишите "npm start" в командную строку
 
-const express = require("express");
-const PostRouter = require("./Post/post.router");
+import express from "express"
+import { PostRouter } from "./Post/post.router"
 
 const server = express();
 
@@ -10,7 +10,7 @@ server.use(express.json());
 server.use(PostRouter);
 
 const HOST = "localhost";
-const PORT = "8000";
+const PORT = 8000;
 
 server.listen(PORT, HOST, () => {
     let link = `${HOST}:${PORT}`

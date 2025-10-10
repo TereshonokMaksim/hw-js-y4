@@ -7,20 +7,20 @@ const momentModule = require("moment");
 const DATA_FILE_PATH = pathModule.join(__dirname, "..", "data.json");
 const postsData = JSON.parse(FS.readFileSync(DATA_FILE_PATH, "utf-8"));
 
-const PostService = {
-    getAllPosts(take, skip){
+export const PostService = {
+    getAllPosts(take?: number | string, skip?: number | string){
         let selectedPosts = [...postsData];
         if (skip){
-            selectedPosts = selectedPosts.slice(skip)
+            selectedPosts = selectedPosts.slice(+skip)
         }
         if (take){
-            selectedPosts = selectedPosts.slice(0, take)
+            selectedPosts = selectedPosts.slice(0, +take)
         }
         return selectedPosts
     },
-    getPostById(id){
+    getPostById(id: number){
         // Возвращает ничего если пост за запрошенным id не является реальным
-        let post = postsData.find((obj) => obj.id == id);
+        let post = postsData.find((obj: {id: number}) => obj.id == id);
         if (!post){
             return
         }
@@ -35,7 +35,7 @@ const PostService = {
         }
         return supposedId + 1
     },
-    isURL(str){
+    isURL(str: string){
         try{
             new URL(str);
             return true
@@ -55,7 +55,7 @@ const PostService = {
             return error
         }
     },
-    async addPost(postData){
+    async addPost(postData: {name: string, description: string, image: string}){
         const newPost = {id: this.getId(), ...postData, likes: 0};
         postsData.push(newPost);
         const updateData = await this.updateJSON();
@@ -73,5 +73,3 @@ const PostService = {
         return date
     }
 }
-
-module.exports = PostService

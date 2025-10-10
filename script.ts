@@ -1,7 +1,7 @@
 // This file is now reserved for functions
 // Этот файл теперь зарезервирован для функций
 
-const momentModule = require("moment");
+import momentModule from "moment";
 
 function getCurrentDay(){
     return momentModule.weekdays(momentModule().day());
@@ -26,7 +26,7 @@ function getDate(){
     return date
 }
 
-function getCurrentWeekday(number){
+function getCurrentWeekday(number: number){
     if (number){
         return momentModule().day()
     }   
@@ -40,6 +40,4 @@ function getCurrentWeekday(number){
 // console.log(getDate()) // TASK 2 MODULE 1
 // console.log(`Number ver: ${getCurrentWeekday(true)}\nWord ver: ${getCurrentWeekday(false)}`) // TASK 3 MODULE 1
 
-module.exports = {
-    getDate: getDate
-}
+export {getDate}
