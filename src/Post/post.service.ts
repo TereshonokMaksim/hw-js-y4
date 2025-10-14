@@ -2,13 +2,14 @@ import FS from "fs";
 import FSPromises from "fs/promises";
 import pathModule from "path";
 import momentModule from "moment";
+import { Post, PostServiceContract } from "./post.types";
 
 
 const DATA_FILE_PATH: string = pathModule.join(__dirname, "..", "data.json");
-const postsData: {id: number, name: string, description: string, image: string, likes: number}[] = JSON.parse(FS.readFileSync(DATA_FILE_PATH, "utf-8"));
+const postsData: Post[] = JSON.parse(FS.readFileSync(DATA_FILE_PATH, "utf-8"));
 
-export const PostService = {
-    getAllPosts(take?: number | string, skip?: number | string){
+export const PostService: PostServiceContract = {
+    getAllPosts(take, skip){
         let selectedPosts = [...postsData];
         if (skip){
             selectedPosts = selectedPosts.slice(+skip)
@@ -18,7 +19,7 @@ export const PostService = {
         }
         return selectedPosts
     },
-    getPostById(id: number){
+    getPostById(id){
         // Возвращает ничего если пост за запрошенным id не является реальным
         let post = postsData.find((obj: {id: number}) => obj.id == id);
         if (!post){
@@ -27,17 +28,18 @@ export const PostService = {
         return post
     },
     getId(){
-        let supposedId = 0
+        let supposedId: number = 0
         for (let post of postsData){
             if (post.id > supposedId){
                 supposedId = post.id
             }
         }
-        return supposedId + 1
+        supposedId++
+        return supposedId
     },
-    isURL(str: string){
+    isURL(urlString){
         try{
-            new URL(str);
+            new URL(urlString);
             return true
         }
         catch{
@@ -51,16 +53,16 @@ export const PostService = {
             return false
         }
         catch (error) {
-            console.log(`During updating JSON file, server encountered something, that it should have never ecnountered: \n\n${error}`)
-            return error
+            console.log(`During updating JSON file, server encountered something, that it should have never ecnountered: \nError message:\n${error}`)
+            return true
         }
     },
-    async addPost(postData: {name: string, description: string, image: string}){
-        const newPost = {id: this.getId(), ...postData, likes: 0};
+    async addPost(postData){
+        const newPost: Post = {id: this.getId(), ...postData, likes: 0};
         postsData.push(newPost);
         const updateData = await this.updateJSON();
         if (updateData){
-            return 
+            return false
         }
         return newPost
     },
@@ -71,5 +73,19 @@ export const PostService = {
         date = mom.format("YYYY/DD/MM HH:mm:ss")
 
         return date
+    },
+    async updatePost(newPostData, id){
+        const selectedPost = this.getPostById(id);
+        if (!selectedPost){
+            return undefined
+        }
+        const selectedPostIndex: number = postsData.indexOf(selectedPost);
+        let newPost: Post = {...selectedPost, ...newPostData}
+        postsData.splice(selectedPostIndex, 1, newPost)
+        const unsuccessDataUpdate = await this.updateJSON();
+        if (unsuccessDataUpdate){
+            return "updatePost-service-82"
+        }
+        return newPost
     }
 }

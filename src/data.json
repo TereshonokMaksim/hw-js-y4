@@ -8,16 +8,16 @@
     },
     {
         "id": 1,
-        "name": "phone V0",
-        "description": "Tempor consequat cupidatat excepteur dolor et. Laborum deserunt aliqua adipisicing dolore cupidatat dolore nostrud minim elit. Nulla tempor nisi deserunt consequat nisi.",
-        "image": "https://thumbs.dreamstime.com/b/broken-glass-phone-cellular-design-isolated-blsack-36126695.jpg",
+        "name": "Ringwoodite",
+        "description": "This blue crystal reminds me of lapis lazuli, so blue and random chemical structure.",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/8/8f/BlueRingwoodite.jpg",
         "likes": 301
     },
     {
         "id": 2,
-        "name": "carpet V0",
-        "description": "Non dolor excepteur voluptate ad et cupidatat laboris do duis.",
-        "image": "https://roomtery.com/cdn/shop/products/grandma-carpet-aesthetic-wall-tapestry-roomtery1.jpg?v=1647958595&width=1946",
+        "name": "Olivine",
+        "description": "This olive colored crystal is quite interesting, yet, has pretty same chemical composition as Ringwoodite.",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/f/fb/Olivine-gem7-10a.jpg",
         "likes": 15
     },
     {

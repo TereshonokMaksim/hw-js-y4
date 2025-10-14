@@ -1,5 +1,7 @@
+import { stringify } from "querystring";
 import { PostService } from "./post.service";
 import { Request, Response } from "express";
+import { reduceEachTrailingCommentRange } from "typescript";
 
 export const PostController = {
     getAllPosts(request: Request, response: Response) {
@@ -72,6 +74,73 @@ export const PostController = {
             response.status(500).json("Post creation failed for unexplainable reason, report to devs and get free coffee.");
             console.log(`During post creation, server decided that it had enough and stopped doing basic things.\nAlso, prepare some coffee.\nError:\n\n${error}`);
             return
+        }
+    },
+    async updatePost(request: Request, response: Response){
+        const data = request.body
+        const id = request.params.id
+        if (!data){
+            response.status(422).json("Request body is aboslutely required for this request.")
+            return
+        }
+        if (!id){
+            response.status(422).json("ID of edited post is required.")
+            return
+        }
+        if (id.trim().length == 0){
+            response.status(422).json("ID must be a number, not just spaces.")
+            return
+        }
+        if (isNaN(+id)){
+            response.status(422).json("ID must be a number.")
+            return
+        }   
+        if (Math.round(+id) != +id){
+            response.status(422).json("ID should be INTEGER, not float...")
+            return
+        }
+        if (+id < 0){
+            response.status(422).json("ID should be a positive number")
+            return
+        }
+        if (data.likes){
+            if (data.likes.trim().length == 0){
+                response.status(422).json("You cant just use bunch of spaces as likes and hope it will work.")
+                return
+            }
+            if (isNaN(data.likes)){
+                response.status(422).json("Likes should be a number.")
+                return
+            }
+            if (Math.round(+data.likes) != +data.likes){
+                response.status(422).json("Likes should be INTEGER, not float.")
+                return
+            }
+            // Нет проверки на позитивное число лайков поскольку
+            // они могут быть отрицательными, если пост наберет
+            // больше негативных реакций 
+        }
+        if (data.image){
+            if (!PostService.isURL(data.image)){
+                response.status(422).json("Image should be an URL string.")
+                return
+            }
+        }
+        try{
+            let newPostData = await PostService.updatePost(data, +id)
+            if (!newPostData){
+                response.status(404).json(`Post with id '${id}' not found.`)
+                return
+            }
+            if (typeof newPostData == "string"){
+                response.status(500).json(`Unexpected error happened, error code: ${newPostData}`)
+                return
+            }
+            response.status(200).json(newPostData)
+        }
+        catch (error){
+            console.log(`They still got error after i added 10 layers of ensuring, that data is correct.\nNo amount of coffee will save this server.\n\nError message:\n${error}`)
+            response.status(500).json(`Unexpected error happened. No error code provided. Report to somebody who is related with this server right now and get access to code, so you can fix it yourself.`)
         }
     }
 }
