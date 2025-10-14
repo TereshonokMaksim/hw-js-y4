@@ -1,8 +1,15 @@
 To launch server of this application, type "npm start" with terminal opened in this thing.
 If this is not working, make sure you installed modules required for work (write "npm install" for installing) and check if your npm works at all (if not - download one from internet)
 
-Change log (since Module 2):
+### Change log (since Module 2):
 
-    10.10.2025 - Changed JS to TS
-    
-    14.10.2025 - Impoved typing using interfaces and types. Added first Contract, for easier work between files. Added link to update posts by ID with a lot of conditions using PATCH method.
+#### 10.10.2025 - Mod2 Task1
+
+    Changed JS to TS.
+    Added basic typing.
+
+#### 14.10.2025 - Mod2 Task2
+
+    Impoved typing using interfaces and types. 
+    Added first Contract, for easier work between files. 
+    Added link to update posts by ID with a lot of conditions using PATCH method.
