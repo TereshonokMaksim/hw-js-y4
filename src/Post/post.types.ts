@@ -26,6 +26,6 @@ export interface PostControllerContract {
     getAllPosts(request: Request<void, Post[] | string, void, {take?: string, skip?: string}>, response: Response<Post[] | string>): void
     getPostById(request: Request<{id: string}, Post | String, void, void>, response: Response<Post | string>): void
     getTimestamp(request: Request<void, string, void, void>, response: Response<string>): void
-    createPost(request: Request<void, Post | string, {name: string, description: string, likes: string, image: string}, void>, response: Response<Post | string>): void
-    updatePost(request: Request<{id: string}, Post | string, PostUpdate, void>, response: Response<Post | string>): void
+    createPost(request: Request<void, Post | string, {name: string, description: string, likes: string, image: string}, void>, response: Response<Post | string>): Promise<void>
+    updatePost(request: Request<{id: string}, Post | string, PostUpdate, void>, response: Response<Post | string>): Promise<void>
 }
