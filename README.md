@@ -13,3 +13,9 @@ If this is not working, make sure you installed modules required for work (write
     Impoved typing using interfaces and types. 
     Added first Contract, for easier work between files. 
     Added link to update posts by ID with a lot of conditions using PATCH method.
+
+#### 17.10.2025 - Mod2 Task3
+
+    Added Post Controller contract, for better understanding of types.
+    Used Request and Response generic types, for good readability of Controller part.
+    Added likes check on Post creation in Controller part.
