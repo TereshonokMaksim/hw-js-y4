@@ -62,7 +62,7 @@ export const PostService: PostServiceContract = {
         postsData.push(newPost);
         const updateData = await this.updateJSON();
         if (updateData){
-            return false
+            return
         }
         return newPost
     },

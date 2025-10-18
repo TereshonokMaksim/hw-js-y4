@@ -1,10 +1,10 @@
 import { stringify } from "querystring";
 import { PostService } from "./post.service";
-import { Request, Response } from "express";
+import { PostControllerContract, PostUpdate } from "./post.types";
 import { reduceEachTrailingCommentRange } from "typescript";
 
-export const PostController = {
-    getAllPosts(request: Request, response: Response) {
+export const PostController: PostControllerContract = {
+    getAllPosts(request, response) {
         let query: {take?: string, skip?: string} = request.query;
         if (query.skip){
             if (isNaN(Number(query.skip))){
@@ -28,7 +28,7 @@ export const PostController = {
         }
         response.status(200).json(PostService.getAllPosts(query.take, query.skip));
     },
-    getPostById(request: Request, response: Response) {
+    getPostById(request, response) {
         if (!request.params.id){
             response.status(400).json("Bad ID, there is no ID... what.")
             return
@@ -45,10 +45,16 @@ export const PostController = {
         }
         response.status(200).json(post);
     },
-    getTimestamp(request: Request, response: Response) {
-        response.json(PostService.getDate());
+    getTimestamp(request, response) {
+        try{
+            response.status(200).json(PostService.getDate());
+        }
+        catch (error){
+            response.status(500).json("Failed to get timestamp, server was transported to Alpha Centauri and doesnt know how time works here.")
+            console.log(`Wow, one line function broke. How this server cant process literally 5 lines of code? Ugh.\n\nError:\n${error}`)
+        }
     },
-    async createPost(request: Request, response: Response) {
+    async createPost(request, response) {
         if (!request.body){
             response.status(422).json("Request body is required.");
             return
@@ -62,8 +68,23 @@ export const PostController = {
             response.status(422).json("Image should be a link to said image.");
             return
         }
+        if (!data.likes){
+            response.status(422).json("Likes should exists, even if they are 0.")
+        }
+        if (data.likes.trim().length == 0){
+            response.status(422).json("You cant just use bunch of spaces as likes and hope it will work.")
+            return
+        }
+        if (isNaN(+data.likes)){
+            response.status(422).json("Likes should be a number.")
+            return
+        }
+        if (Math.round(+data.likes) != +data.likes){
+            response.status(422).json("Likes should be INTEGER, not float.")
+            return
+        }
         try{
-            const newPost = await PostService.addPost(data);
+            const newPost = await PostService.addPost({...data, likes: +data.likes});
             if (!newPost){
                 response.status(500).json("Post save failed for some reason, contact devs immediatly and get free air.");
                 return
@@ -76,7 +97,7 @@ export const PostController = {
             return
         }
     },
-    async updatePost(request: Request, response: Response){
+    async updatePost(request, response){
         const data = request.body
         const id = request.params.id
         if (!data){
@@ -84,31 +105,31 @@ export const PostController = {
             return
         }
         if (!id){
-            response.status(422).json("ID of edited post is required.")
+            response.status(400).json("ID of edited post is required.")
             return
         }
         if (id.trim().length == 0){
-            response.status(422).json("ID must be a number, not just spaces.")
+            response.status(400).json("ID must be a number, not just spaces.")
             return
         }
         if (isNaN(+id)){
-            response.status(422).json("ID must be a number.")
+            response.status(400).json("ID must be a number.")
             return
         }   
         if (Math.round(+id) != +id){
-            response.status(422).json("ID should be INTEGER, not float...")
+            response.status(400).json("ID should be INTEGER, not float...")
             return
         }
         if (+id < 0){
-            response.status(422).json("ID should be a positive number")
+            response.status(400).json("ID should be a positive number")
             return
         }
         if (data.likes){
-            if (data.likes.trim().length == 0){
+            if (String(data.likes).trim().length == 0){
                 response.status(422).json("You cant just use bunch of spaces as likes and hope it will work.")
                 return
             }
-            if (isNaN(data.likes)){
+            if (isNaN(+data.likes)){
                 response.status(422).json("Likes should be a number.")
                 return
             }

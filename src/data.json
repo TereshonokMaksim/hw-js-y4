@@ -801,5 +801,12 @@
         "description": "This green looking rock is ore, from which we can get some grayish Nickel.",
         "image": "https://www.allcrystal.com/wp-content/uploads/2023/04/Raw-Garnierite-x-no-credit-needed.jpg",
         "likes": 0
+    },
+    {
+        "id": 115,
+        "name": "Electrum",
+        "description": "The image shows Electrum in its natural formation. Electrum is naturally formed alloy of silver, gold and some other metals such as copper.",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/3/3a/Electrum_on_quartz_Telluride_%28cropped%29.jpg",
+        "likes": 0
     }
 ]
