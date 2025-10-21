@@ -1,3 +1,7 @@
 node_modules/
 package-lock.json
 tests/
+.env
+/src/generated/prisma
+/prisma/db
+/prisma/migrations

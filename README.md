@@ -19,3 +19,9 @@ If this is not working, make sure you installed modules required for work (write
     Added Post Controller contract, for better understanding of types.
     Used Request and Response generic types, for good readability of Controller part.
     Added likes check on Post creation in Controller part.
+
+#### 21.10.2025 - Mod2 Task4
+
+    Added Prisma to project.
+    Created actual models of Post and Tag.
+    Created seed for putting test data into database.

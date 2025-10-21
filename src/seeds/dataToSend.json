@@ -1,0 +1,79 @@
+{
+    "posts": [
+        {
+            "id": 1,
+            "name": "Argillite",
+            "description": "Sedimentary rock thats actually not just gravel or processed mollusks.",
+            "image": "https://upload.wikimedia.org/wikipedia/commons/a/a3/Argillite.JPG",
+            "likes": 12
+        },
+        {
+            "id": 2,
+            "name": "Basalt",
+            "description": "Extrusive magmatic rock that is really famous. Its not very cool, but it has some ores.",
+            "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Basalt_12_%2848674276333%29.jpg/1920px-Basalt_12_%2848674276333%29.jpg",
+            "likes": 5
+        },
+        {
+            "id": 3,
+            "name": "Chalcopyrite",
+            "description": "Copper ore, thats quite easy to find. Very important for copper mining industry and forms nice crystals.",
+            "image": "https://upload.wikimedia.org/wikipedia/commons/2/2c/Chalcopyrite-199453.jpg",
+            "likes": 48
+        },
+        {
+            "id": 4,
+            "name": "Tennanite",
+            "description": "That is some strange copper ore, as sometimes it looks like crystals, sometimes like andesite.",
+            "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Tennantite2.jpg/1920px-Tennantite2.jpg",
+            "likes": 29
+        },
+        {
+            "id": 5,
+            "name": "Limonite",
+            "description": "Even though its an iron ore, it is largely used as nickel deposits. Also, it is very yellow, you can use it to get yellow dye or smth.",
+            "image": "https://upload.wikimedia.org/wikipedia/commons/2/2e/LimoniteUSGOV.jpg",
+            "likes": 106
+        }
+    ],
+    "tags": [
+        {
+            "id": 1,
+            "name": "Rock"
+        },
+        {
+            "id": 2,
+            "name": "Ore"
+        },
+        {
+            "id": 3,
+            "name": "Copper"
+        },
+        {
+            "id": 4,
+            "name": "Iron"
+        }
+    ],
+    "connections": [
+        {
+            "postId": 1,
+            "tagsId": [1]
+        },
+        {
+            "postId": 2,
+            "tagsId": [1]
+        },
+        {
+            "postId": 3,
+            "tagsId": [2, 3]
+        },
+        {
+            "postId": 4,
+            "tagsId": [2, 3]
+        },
+        {
+            "postId": 5,
+            "tagsId": [2, 4]
+        }
+    ]
+}
