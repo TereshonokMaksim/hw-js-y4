@@ -2,15 +2,21 @@ import FS from "fs";
 import FSPromises from "fs/promises";
 import pathModule from "path";
 import momentModule from "moment";
-import { Post, PostServiceContract } from "./post.types";
+import { Post, PostServiceContract, UpdatePostChecked, CreatePostChecked, CreatePost } from "./post.types";
+import { PrismaClient, Prisma } from "../generated/prisma";
 
-
-const DATA_FILE_PATH: string = pathModule.join(__dirname, "..", "data.json");
-const postsData: Post[] = JSON.parse(FS.readFileSync(DATA_FILE_PATH, "utf-8"));
+const prisma = new PrismaClient()
+// const DATA_FILE_PATH: string = pathModule.join(__dirname, "..", "data.json");
+// const postsData: Post[] = JSON.parse(FS.readFileSync(DATA_FILE_PATH, "utf-8"));
 
 export const PostService: PostServiceContract = {
-    getAllPosts(take, skip){
-        let selectedPosts = [...postsData];
+    async getAllPosts(take, skip){
+        /*
+            Можно было бы поместить skip и take внутрь findMany,
+            но говорят что так оптимизация хуже по какой то причине,
+            и оно не дружит с undefined, потому будет по старой схеме
+        */
+        let selectedPosts = await prisma.post.findMany();
         if (skip){
             selectedPosts = selectedPosts.slice(+skip)
         }
@@ -19,23 +25,25 @@ export const PostService: PostServiceContract = {
         }
         return selectedPosts
     },
-    getPostById(id){
+    async getPostById(id){
         // Возвращает ничего если пост за запрошенным id не является реальным
-        let post = postsData.find((obj: {id: number}) => obj.id == id);
+        // так ведь?
+        let post;
+        try{
+            post = prisma.post.findUnique({
+                where: {
+                    id: id
+                }
+            })
+        }
+        catch (error){
+            console.log(`DB decided that it is independent and refuses to elaborate! More specifically, it decided not to give Post by ID.\n\nData: \n  ID: ${id}\n\nError: \n${error}`)
+            return
+        }
         if (!post){
             return
         }
         return post
-    },
-    getId(){
-        let supposedId: number = 0
-        for (let post of postsData){
-            if (post.id > supposedId){
-                supposedId = post.id
-            }
-        }
-        supposedId++
-        return supposedId
     },
     isURL(urlString){
         try{
@@ -46,25 +54,18 @@ export const PostService: PostServiceContract = {
             return false
         }
     },
-    async updateJSON(){
-        try {
-            const cookedData = JSON.stringify(postsData, null, 4);
-            await FSPromises.writeFile(DATA_FILE_PATH, cookedData);
-            return false
-        }
-        catch (error) {
-            console.log(`During updating JSON file, server encountered something, that it should have never ecnountered: \nError message:\n${error}`)
-            return true
-        }
-    },
     async addPost(postData){
-        const newPost: Post = {id: this.getId(), ...postData, likes: 0};
-        postsData.push(newPost);
-        const updateData = await this.updateJSON();
-        if (updateData){
+        const newPost: CreatePost = {...postData, likes: 0};
+        try{
+            const updateData = await prisma.post.create({
+                data: newPost
+            });
+            return updateData
+        }
+        catch (error){
+            console.log(`It turns out, its not so easy to create POST anymore.\n\nData: ${newPost}\n\nError:\n${error}`)
             return
         }
-        return newPost
     },
     getDate(){
         let date;
@@ -75,17 +76,61 @@ export const PostService: PostServiceContract = {
         return date
     },
     async updatePost(newPostData, id){
-        const selectedPost = this.getPostById(id);
-        if (!selectedPost){
-            return undefined
+        // const selectedPostIndex: number = postsData.indexOf(selectedPost);
+        // let newPost: Post = {...selectedPost, ...newPostData}
+        try{
+            let newPost: Post = await prisma.post.update({
+                where: {
+                    id: id
+                },
+                data: newPostData
+            })
+            return newPost
         }
-        const selectedPostIndex: number = postsData.indexOf(selectedPost);
-        let newPost: Post = {...selectedPost, ...newPostData}
-        postsData.splice(selectedPostIndex, 1, newPost)
-        const unsuccessDataUpdate = await this.updateJSON();
-        if (unsuccessDataUpdate){
-            return "updatePost-service-82"
+        catch (error) {
+            console.log(`Updating product with ID of ${id} failed for unexplainable reasons.\n\nData: \n  ID: ${id}\n  New post data: ${newPostData}\n\nError:\n${error}`)
+            return "updatePost-service-DB"
         }
-        return newPost
+        // const unsuccessDataUpdate = await this.updateJSON();
+        // if (unsuccessDataUpdate){
+        //     return "updatePost-service-"
+        // }
+    },
+    async deletePost(id){
+        try{
+            let deletedPost = await prisma.post.delete({
+                    where: {
+                        id: id
+                    }
+                })
+            return deletedPost
+        }
+        catch (error) {
+            if (error instanceof Prisma.PrismaClientKnownRequestError){
+                return `There is no object with ID ${id}.///404`
+            }
+            else {
+                console.log(`Our server refuses to delete its precious data!\n\nData: \n  ID: ${id}\n\nError: \n${error}`)
+                return "Internal Server Error during deleting post.///500"
+            }
+        }
+    },
+    async validateId(id){
+        if (!id){
+            return "ID of edited post is required."
+        }
+        if (id.trim().length == 0){
+            return "ID must be a number, not just spaces."
+        }
+        if (isNaN(+id)){
+            return "ID must be a number."
+        }   
+        if (Math.round(+id) != +id){
+            return "ID should be INTEGER, not float."
+        }
+        if (+id < 0){
+            return "ID should be positive number."
+        }
+        return true
     }
 }

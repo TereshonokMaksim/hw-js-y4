@@ -5,7 +5,6 @@
 import { PrismaClient } from '../generated/prisma';
 import FS from "fs";
 import Path from "path";
-import { Post, Tag } from '../generated/prisma';
 import { jsonData } from './seed.types';
 
 const prisma = new PrismaClient();

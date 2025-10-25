@@ -25,3 +25,9 @@ If this is not working, make sure you installed modules required for work (write
     Added Prisma to project.
     Created actual models of Post and Tag.
     Created seed for putting test data into database.
+
+#### 25.10.2025 - Mod2 Task5
+
+    Succesfully used Prisma to make types be same as in DB schema.
+    Changed DB from JSON file to Prisma ORM with Sqlite DB.
+    Added Post deletion.

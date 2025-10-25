@@ -1,11 +1,10 @@
-import { stringify } from "querystring";
 import { PostService } from "./post.service";
-import { PostControllerContract, PostUpdate } from "./post.types";
-import { reduceEachTrailingCommentRange } from "typescript";
+import { PostControllerContract } from "./post.types";
 
 export const PostController: PostControllerContract = {
-    getAllPosts(request, response) {
+    async getAllPosts(request, response) {
         let query: {take?: string, skip?: string} = request.query;
+        let take, skip;
         if (query.skip){
             if (isNaN(Number(query.skip))){
                 response.status(400).json("Bad 'skip' parameter, requires INTEGER data type.");
@@ -15,6 +14,7 @@ export const PostController: PostControllerContract = {
                 response.status(400).json("Bad 'skip' parameter, check for it to be round and positive number.");
                 return
             }
+            skip = +query.skip
         }
         if (query.take){
             if (isNaN(Number(query.take))){
@@ -25,20 +25,18 @@ export const PostController: PostControllerContract = {
                 response.status(400).json("Bad 'take' parameter, check for it to be round and positive number.");
                 return
             }
+            take = +query.take
         }
-        response.status(200).json(PostService.getAllPosts(query.take, query.skip));
+        response.status(200).json(await PostService.getAllPosts(take, skip));
     },
-    getPostById(request, response) {
-        if (!request.params.id){
-            response.status(400).json("Bad ID, there is no ID... what.")
+    async getPostById(request, response) {
+        const id: string = request.params.id;
+        let validId = await PostService.validateId(id)
+        if (typeof validId == "string"){
+            response.status(400).json(validId)
             return
         }
-        const id: number = +request.params.id;
-        if (isNaN(id)){
-            response.status(400).json("Bad ID, requires INTEGER data type.");
-            return
-        }
-        let post = PostService.getPostById(id);
+        let post = await PostService.getPostById(+id);
         if (!post){
             response.status(404).json("Bad ID, post with such ID is not found.");
             return
@@ -71,7 +69,7 @@ export const PostController: PostControllerContract = {
         if (!data.likes){
             response.status(422).json("Likes should exists, even if they are 0.")
         }
-        if (data.likes.trim().length == 0){
+        if (String(data.likes).trim().length == 0){
             response.status(422).json("You cant just use bunch of spaces as likes and hope it will work.")
             return
         }
@@ -101,27 +99,12 @@ export const PostController: PostControllerContract = {
         const data = request.body
         const id = request.params.id
         if (!data){
-            response.status(422).json("Request body is aboslutely required for this request.")
+            response.status(422).json("Request body is absolutely required for this request.")
             return
         }
-        if (!id){
-            response.status(400).json("ID of edited post is required.")
-            return
-        }
-        if (id.trim().length == 0){
-            response.status(400).json("ID must be a number, not just spaces.")
-            return
-        }
-        if (isNaN(+id)){
-            response.status(400).json("ID must be a number.")
-            return
-        }   
-        if (Math.round(+id) != +id){
-            response.status(400).json("ID should be INTEGER, not float...")
-            return
-        }
-        if (+id < 0){
-            response.status(400).json("ID should be a positive number")
+        let validId = await PostService.validateId(id)
+        if (typeof validId == "string"){
+            response.status(400).json(validId)
             return
         }
         if (data.likes){
@@ -142,7 +125,8 @@ export const PostController: PostControllerContract = {
             // больше негативных реакций 
         }
         if (data.image){
-            if (!PostService.isURL(data.image)){
+            // Орать на орущего оказалось крайне эффективным!
+            if (!PostService.isURL(data.image as string)){
                 response.status(422).json("Image should be an URL string.")
                 return
             }
@@ -163,5 +147,24 @@ export const PostController: PostControllerContract = {
             console.log(`They still got error after i added 10 layers of ensuring, that data is correct.\nNo amount of coffee will save this server.\n\nError message:\n${error}`)
             response.status(500).json(`Unexpected error happened. No error code provided. Report to somebody who is related with this server right now and get access to code, so you can fix it yourself.`)
         }
+    },
+    async deletePost(request, response){
+        const id = request.params.id;
+        let validId = await PostService.validateId(id);
+        if (typeof validId == "string"){
+            response.status(400).json(validId);
+            return
+        }
+        let deletedPost = await PostService.deletePost(+id);
+        if (typeof deletedPost == "string"){
+            let deletedPostUnpacked = deletedPost.split("///")
+            if (!deletedPostUnpacked[1]){
+                console.log(`Thats a bad error message for deleting post, man.\n\nData: \n  Message: ${deletedPost}`)
+                return
+            }
+            response.status(+deletedPostUnpacked[1]).json(deletedPostUnpacked[0])
+            return
+        }
+        response.status(200).json(deletedPost)
     }
 }

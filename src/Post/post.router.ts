@@ -8,3 +8,4 @@ PostRouter.get("/posts/:id", PostController.getPostById)
 PostRouter.get("/timestamp", PostController.getTimestamp);
 PostRouter.post("/posts", PostController.createPost)
 PostRouter.patch("/posts/:id", PostController.updatePost)
+PostRouter.delete("/posts/:id", PostController.deletePost)
