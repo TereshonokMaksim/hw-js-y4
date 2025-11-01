@@ -1,9 +1,7 @@
-import FS from "fs";
-import FSPromises from "fs/promises";
-import pathModule from "path";
 import momentModule from "moment";
-import { Post, PostServiceContract, UpdatePostChecked, CreatePostChecked, CreatePost } from "./post.types";
+import { Post, PostServiceContract, CreatePost } from "./post.types";
 import { PrismaClient, Prisma } from "../generated/prisma";
+import { PostRepository } from "./post.repository";
 
 const prisma = new PrismaClient()
 // const DATA_FILE_PATH: string = pathModule.join(__dirname, "..", "data.json");
@@ -15,35 +13,15 @@ export const PostService: PostServiceContract = {
             Можно было бы поместить skip и take внутрь findMany,
             но говорят что так оптимизация хуже по какой то причине,
             и оно не дружит с undefined, потому будет по старой схеме
+            Edit: Конфиг изменен, теперь оно работает красиво
         */
-        let selectedPosts = await prisma.post.findMany();
-        if (skip){
-            selectedPosts = selectedPosts.slice(+skip)
-        }
-        if (take){
-            selectedPosts = selectedPosts.slice(0, +take)
-        }
-        return selectedPosts
+        return await PostRepository.getAllPosts(take, skip)
     },
     async getPostById(id){
         // Возвращает ничего если пост за запрошенным id не является реальным
         // так ведь?
-        let post;
-        try{
-            post = prisma.post.findUnique({
-                where: {
-                    id: id
-                }
-            })
-        }
-        catch (error){
-            console.log(`DB decided that it is independent and refuses to elaborate! More specifically, it decided not to give Post by ID.\n\nData: \n  ID: ${id}\n\nError: \n${error}`)
-            return
-        }
-        if (!post){
-            return
-        }
-        return post
+        // ¯\_(ツ)_/¯
+        return PostRepository.getPostById(id)
     },
     isURL(urlString){
         try{
@@ -56,16 +34,7 @@ export const PostService: PostServiceContract = {
     },
     async addPost(postData){
         const newPost: CreatePost = {...postData, likes: 0};
-        try{
-            const updateData = await prisma.post.create({
-                data: newPost
-            });
-            return updateData
-        }
-        catch (error){
-            console.log(`It turns out, its not so easy to create POST anymore.\n\nData: ${newPost}\n\nError:\n${error}`)
-            return
-        }
+        return PostRepository.addPost(newPost)
     },
     getDate(){
         let date;
@@ -76,44 +45,10 @@ export const PostService: PostServiceContract = {
         return date
     },
     async updatePost(newPostData, id){
-        // const selectedPostIndex: number = postsData.indexOf(selectedPost);
-        // let newPost: Post = {...selectedPost, ...newPostData}
-        try{
-            let newPost: Post = await prisma.post.update({
-                where: {
-                    id: id
-                },
-                data: newPostData
-            })
-            return newPost
-        }
-        catch (error) {
-            console.log(`Updating product with ID of ${id} failed for unexplainable reasons.\n\nData: \n  ID: ${id}\n  New post data: ${newPostData}\n\nError:\n${error}`)
-            return "updatePost-service-DB"
-        }
-        // const unsuccessDataUpdate = await this.updateJSON();
-        // if (unsuccessDataUpdate){
-        //     return "updatePost-service-"
-        // }
+        return PostRepository.updatePost(newPostData, id)
     },
     async deletePost(id){
-        try{
-            let deletedPost = await prisma.post.delete({
-                    where: {
-                        id: id
-                    }
-                })
-            return deletedPost
-        }
-        catch (error) {
-            if (error instanceof Prisma.PrismaClientKnownRequestError){
-                return `There is no object with ID ${id}.///404`
-            }
-            else {
-                console.log(`Our server refuses to delete its precious data!\n\nData: \n  ID: ${id}\n\nError: \n${error}`)
-                return "Internal Server Error during deleting post.///500"
-            }
-        }
+        return PostRepository.deletePost(id)
     },
     async validateId(id){
         if (!id){

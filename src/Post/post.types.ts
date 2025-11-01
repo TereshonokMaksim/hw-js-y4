@@ -1,4 +1,4 @@
-import { Request, response, Response } from 'express';
+import { Request, Response } from 'express';
 import { Prisma } from '../generated/prisma';
 
 export type Post = Prisma.PostGetPayload<{}>
@@ -8,10 +8,10 @@ export type PostWithTags = Prisma.PostGetPayload<{
     }
 }>
 
-export type CreatePost = Prisma.PostCreateInput
-export type CreatePostChecked = Prisma.PostUncheckedCreateInput
-export type UpdatePost = Prisma.PostUpdateInput
-export type UpdatePostChecked = Prisma.PostUncheckedUpdateInput
+export type CreatePost = Prisma.PostUncheckedCreateInput
+export type CreatePostChecked = Prisma.PostCreateInput
+export type UpdatePost = Prisma.PostUncheckedUpdateInput
+export type UpdatePostChecked = Prisma.PostUpdateInput
 
 export interface PostServiceContract {
     getAllPosts(take?: number, skip?: number): Promise<Post[]>
@@ -31,4 +31,12 @@ export interface PostControllerContract {
     createPost(request: Request<void, Post | string, {name: string, description: string, likes: string, image: string}, void>, response: Response<Post | string>): Promise<void>
     updatePost(request: Request<{id: string}, Post | string, UpdatePost, void>, response: Response<Post | string>): Promise<void>
     deletePost(request: Request<{id: string}, Post | string>, response: Response<Post | string>): Promise<void>
+}
+
+export interface PostRepositoryContract {
+    getAllPosts(take?: number, skip?: number): Promise<Post[]>
+    getPostById(id: number): Promise<Post | null | undefined>
+    addPost(postData: CreatePost): Promise<undefined | Post>
+    updatePost(newPostData: UpdatePost, id: number): Promise<Post | undefined | string>
+    deletePost(id: number): Promise<Post | string>
 }

@@ -31,3 +31,9 @@ If this is not working, make sure you installed modules required for work (write
     Succesfully used Prisma to make types be same as in DB schema.
     Changed DB from JSON file to Prisma ORM with Sqlite DB.
     Added Post deletion.
+
+#### 01.11.2025 - Mod2 Task6
+
+    Added Repository layer for Post and Tag modules
+    Moved prisma client to another module - client
+    Created new module - Tag. It contains links to get all tags and tag by id
