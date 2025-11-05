@@ -1,25 +1,18 @@
 import momentModule from "moment";
-import { Post, PostServiceContract, CreatePost } from "./post.types";
-import { PrismaClient, Prisma } from "../generated/prisma";
+import { PostServiceContract, CreatePost } from "./post.types";
 import { PostRepository } from "./post.repository";
 
-const prisma = new PrismaClient()
 // const DATA_FILE_PATH: string = pathModule.join(__dirname, "..", "data.json");
 // const postsData: Post[] = JSON.parse(FS.readFileSync(DATA_FILE_PATH, "utf-8"));
 
 export const PostService: PostServiceContract = {
     async getAllPosts(take, skip){
         /*
-            Можно было бы поместить skip и take внутрь findMany,
-            но говорят что так оптимизация хуже по какой то причине,
-            и оно не дружит с undefined, потому будет по старой схеме
             Edit: Конфиг изменен, теперь оно работает красиво
         */
         return await PostRepository.getAllPosts(take, skip)
     },
     async getPostById(id){
-        // Возвращает ничего если пост за запрошенным id не является реальным
-        // так ведь?
         // ¯\_(ツ)_/¯
         return PostRepository.getPostById(id)
     },

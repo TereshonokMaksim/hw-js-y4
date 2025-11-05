@@ -16,11 +16,11 @@ export type UpdatePostChecked = Prisma.PostUpdateInput
 export interface PostServiceContract {
     getAllPosts(take?: number, skip?: number): Promise<Post[]>
     getPostById(id: number): Promise<Post | null | undefined>
-    isURL(urlstring: string | string): Boolean
+    isURL(urlstring: string): Boolean
     addPost(postData: CreatePost): Promise<undefined | Post>
     getDate(): string
-    updatePost(newPostData: UpdatePost, id: number): Promise<Post | undefined | string>
-    deletePost(id: number): Promise<Post | string>
+    updatePost(newPostData: UpdatePost, id: number): Promise<Post | undefined>
+    deletePost(id: number): Promise<Post>
     validateId(id: string): Promise<Boolean | string>
 }
 
@@ -37,6 +37,6 @@ export interface PostRepositoryContract {
     getAllPosts(take?: number, skip?: number): Promise<Post[]>
     getPostById(id: number): Promise<Post | null | undefined>
     addPost(postData: CreatePost): Promise<undefined | Post>
-    updatePost(newPostData: UpdatePost, id: number): Promise<Post | undefined | string>
-    deletePost(id: number): Promise<Post | string>
+    updatePost(newPostData: UpdatePost, id: number): Promise<Post | undefined>
+    deletePost(id: number): Promise<Post>
 }
