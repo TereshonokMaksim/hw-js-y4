@@ -1,10 +1,6 @@
 import { TagServiceContract } from "./tag.types";
-import { PrismaClient } from "../generated/prisma";
 import { TagRepository } from "./tag.repository";
 
-const prisma = new PrismaClient()
-// const DATA_FILE_PATH: string = pathModule.join(__dirname, "..", "data.json");
-// const postsData: Post[] = JSON.parse(FS.readFileSync(DATA_FILE_PATH, "utf-8"));
 
 export const TagService: TagServiceContract = {
     async getAllTags(take, skip){
