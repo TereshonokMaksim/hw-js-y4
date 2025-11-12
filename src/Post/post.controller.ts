@@ -103,8 +103,8 @@ export const PostController: PostControllerContract = {
                 response.status(201).json(newPost)
             }
             catch (error){
-                response.status(500).json("Post creation failed for unexplainable reason, report to devs and get free coffee.");
                 console.log(`During post creation, server decided that it had enough and stopped doing basic things.\nAlso, prepare some coffee.\nError:\n\n${error}`);
+                response.status(500).json("Post creation failed for unexplainable reason, report to devs and get free coffee.");
                 return
             }
         }

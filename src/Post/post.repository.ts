@@ -119,7 +119,7 @@ export const PostRepository: PostRepositoryContract = {
                 }
                 else if (error.code === "P2025"){
                     console.log("It seems like you want to change void. Sorry, cant help with that.")
-                    throw new Error(`Object with id "${id}" is not found.`)
+                    throw new Error(`Object with id "${id}" is not found while handling updatePost.`)
                 }   
             }
             throw error

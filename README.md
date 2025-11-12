@@ -37,3 +37,8 @@ If this is not working, make sure you installed modules required for work (write
     Added Repository layer for Post and Tag modules
     Moved prisma client to another module - client
     Created new module - Tag. It contains links to get all tags and tag by id
+
+#### 12.11.2025 - Mod2 Task7
+
+    Added User model and relations to Post
+    WIP

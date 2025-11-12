@@ -21,6 +21,9 @@ model Post {
   image       String         @default("No link for ya")
   likes       Int            @default(0)
   tags        TagsAndPosts[]
+  creatorId   Int?
+  createdBy   User?          @relation(fields: [creatorId], references: [id])
+  likedBy     PostLike[]
 }
 
 model Tag {
@@ -36,4 +39,25 @@ model TagsAndPosts {
   tagId  Int
 
   @@id([postId, tagId]) // What? Ask this.
+}
+
+model User {
+  id           Int        @id @default(autoincrement())
+  firstName    String
+  secondName   String
+  email        String     @unique
+  avatar       String
+  password     String
+  isAdmin      Boolean    @default(false)
+  createdPosts Post[]
+  likedPosts   PostLike[]
+}
+
+model PostLike {
+  post   Post @relation(fields: [postId], references: [id])
+  postId Int
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+
+  @@id([postId, userId])
 }
