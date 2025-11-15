@@ -8,22 +8,22 @@ export const TagController: TagControllerContract = {
             let take, skip;
             if (query.skip){
                 if (isNaN(Number(query.skip))){
-                    response.status(400).json("Bad 'skip' parameter, requires INTEGER data type.");
+                    response.status(400).json({message: "Bad 'skip' parameter, requires INTEGER data type."});
                     return
                 }
                 else if (+query.skip < 0 || Math.round(+query.skip) != +query.skip){
-                    response.status(400).json("Bad 'skip' parameter, check for it to be round and positive number.");
+                    response.status(400).json({message: "Bad 'skip' parameter, check for it to be round and positive number."});
                     return
                 }
                 skip = +query.skip
             }
             if (query.take){
                 if (isNaN(Number(query.take))){
-                    response.status(400).json("Bad 'take' parameter, requires INTEGER data type.");
+                    response.status(400).json({message: "Bad 'take' parameter, requires INTEGER data type."});
                     return
                 }
                 else if (+query.take < 0 || Math.round(+query.take) != +query.take){
-                    response.status(400).json("Bad 'take' parameter, check for it to be round and positive number.");
+                    response.status(400).json({message: "Bad 'take' parameter, check for it to be round and positive number."});
                     return
                 }
                 take = +query.take
@@ -32,7 +32,7 @@ export const TagController: TagControllerContract = {
         }
         catch(error){
             console.log(`Seems like something blew up in Tag repository. And it is on the easiest function (right after getAllPosts)...\n\nError:\n${error}`)
-            response.status(500).json("Server is experiencing problems.")
+            response.status(500).json({message: "Server is experiencing problems."})
         }
     },
     async getTagById(request, response) {
@@ -40,12 +40,12 @@ export const TagController: TagControllerContract = {
             const id: string = request.params.id;
             let validId = await TagService.validateId(id)
             if (typeof validId == "string"){
-                response.status(400).json(validId)
+                response.status(400).json({message: validId})
                 return
             }
             let post = await TagService.getTagById(+id);
             if (!post){
-                response.status(404).json("Bad ID, post with such ID is not found.");
+                response.status(404).json({message: "Bad ID, post with such ID is not found."});
                 return
             }
             response.status(200).json(post);
@@ -53,7 +53,7 @@ export const TagController: TagControllerContract = {
         
         catch(error){
             console.log(`Seems like something combusted in Tag repository. And it looks like ID became little too independent.\n\nError:\n${error}`)
-            response.status(500).json("Server is experiencing problems.")
+            response.status(500).json({message: "Server is experiencing problems."})
         }
     }
 }

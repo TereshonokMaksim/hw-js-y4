@@ -41,4 +41,5 @@ If this is not working, make sure you installed modules required for work (write
 #### 12.11.2025 - Mod2 Task7
 
     Added User model and relations to Post
-    WIP
+    Added registration, login and getting info about Yourself routes
+    Setted up some generic types and env

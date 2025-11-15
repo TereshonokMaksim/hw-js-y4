@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { Prisma } from '../generated/prisma';
+import { ErrorResponse } from '../generic/generic.error.messages';
 
 export type Tag = Prisma.TagGetPayload<{}>
 
@@ -15,8 +16,8 @@ export interface TagServiceContract {
 }
 
 export interface TagControllerContract {
-    getAllTags(request: Request<void, Tag[] | string, void, {take?: string, skip?: string}>, response: Response<Tag[] | string>): void
-    getTagById(request: Request<{id: string}, Tag | String, void, void>, response: Response<Tag | string>): void
+    getAllTags(request: Request<void, Tag[] | ErrorResponse, void, {take?: string, skip?: string}>, response: Response<Tag[] | ErrorResponse>): void
+    getTagById(request: Request<{id: string}, Tag | ErrorResponse, void, void>, response: Response<Tag | ErrorResponse>): void
 }
 
 export interface TagRepositoryContract {

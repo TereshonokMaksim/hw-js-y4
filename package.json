@@ -1,6 +1,6 @@
 {
   "name": "hw-js-y4",
-  "version": "4.2.7.1",
+  "version": "4.2.7.2",
   "description": "Homework for JS practice of 4 year of studying",
   "main": "script.js",
   "scripts": {
@@ -19,7 +19,10 @@
   "dependencies": {
     "@prisma/client": "^6.17.1",
     "@types/express": "^5.0.3",
+    "@types/jsonwebtoken": "^9.0.10",
+    "envalid": "^8.1.1",
     "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
     "moment": "^2.30.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
