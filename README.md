@@ -1,6 +1,11 @@
 To launch server of this application, type "npm start" with terminal opened in this thing.
 If this is not working, make sure you installed modules required for work (write "npm install" for installing) and check if your npm works at all (if not - download one from internet)
 
+Also, set up .env file in main directory, it must contain next variables:
+- DATABASE_URL - Path to where Database directory will be stored
+- JWT_ACCESS_SECRET_KEY - Secret key to JWT tokens, DO NOT USE SIMPLE ONES (example: 59ce3e0a1b7fe57eeee403a72c8b161f)
+- JWT_EXPIRES_IN - How much time JWT token can be used (example: 1w)
+
 ### Change log (since Module 2):
 
 #### 10.10.2025 - Mod2 Task1

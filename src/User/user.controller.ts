@@ -2,6 +2,7 @@ import { verify } from "jsonwebtoken";
 import { UserService } from "./user.service";
 import { UserControllerContract } from "./user.types";
 import { ENV } from "../config/env";
+import { GenericValidators } from "../generic/generic.validators";
 
 export const UserController: UserControllerContract = {
     async register(request, response) {
@@ -81,6 +82,10 @@ export const UserController: UserControllerContract = {
             const actualData = verify(tokenData, ENV.JWT_ACCESS_SECRET_KEY)
             if (typeof(actualData) === "string"){
                 response.status(401).json({message: "You have bad token, dont try to fool me."})
+                return
+            }
+            if (!GenericValidators.validateId(String(actualData.id))){
+                response.status(401).json({message: "You have bad token, dont try to fool me twice."})
                 return
             }
             const user = await UserService.getMyself(actualData.id)
