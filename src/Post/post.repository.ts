@@ -58,10 +58,10 @@ export const PostRepository: PostRepositoryContract = {
             throw error
         }
     },
-    async addPost(postData){
+    async addPost(postData, userId){
         try{
             return await prisma.post.create({
-                data: postData
+                data: {...postData, creatorId: userId}
             });
         }
         catch(error){

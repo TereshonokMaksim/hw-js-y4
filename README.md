@@ -48,3 +48,9 @@ Also, set up .env file in main directory, it must contain next variables:
     Added User model and relations to Post
     Added registration, login and getting info about Yourself routes
     Setted up some generic types and env
+
+#### 19.11.2025 - Mod2 Task8
+
+    Created auth middleware, to verify token of user
+    Finally setted creator of Post
+    Added checks for post Deletion and Editing - whether user can access it

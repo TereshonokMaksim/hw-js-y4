@@ -68,27 +68,7 @@ export const UserController: UserControllerContract = {
     },
     async me(request, response){
         try{
-            const token = request.headers.authorization 
-            if (!token){
-                response.status(401).json({message: "You are not authorized yet to be able to use this function."})
-                return
-            }
-            const [authType, tokenData] = token.split(" ")
-            if (!authType || authType != "Bearer" || !tokenData){
-                // beer
-                response.status(401).json({message: "You have incorrect authorization data, so i dont trust you."})
-                return
-            }
-            const actualData = verify(tokenData, ENV.JWT_ACCESS_SECRET_KEY)
-            if (typeof(actualData) === "string"){
-                response.status(401).json({message: "You have bad token, dont try to fool me."})
-                return
-            }
-            if (!GenericValidators.validateId(String(actualData.id))){
-                response.status(401).json({message: "You have bad token, dont try to fool me twice."})
-                return
-            }
-            const user = await UserService.getMyself(actualData.id)
+            const user = await UserService.getMyself(response.locals.userId)
             response.status(200).json(user)
         }
         catch(error){

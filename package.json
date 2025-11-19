@@ -1,6 +1,6 @@
 {
   "name": "hw-js-y4",
-  "version": "4.2.7.2",
+  "version": "4.2.8",
   "description": "Homework for JS practice of 4 year of studying",
   "main": "script.js",
   "scripts": {
@@ -20,6 +20,7 @@
     "@prisma/client": "^6.17.1",
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",
+    "bcryptjs": "^3.0.3",
     "envalid": "^8.1.1",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",

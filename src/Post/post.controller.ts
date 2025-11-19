@@ -97,7 +97,7 @@ export const PostController: PostControllerContract = {
                 return
             }
             try{
-                const newPost = await PostService.addPost({...data, likes: +data.likes});
+                const newPost = await PostService.addPost({...data, likes: +data.likes}, response.locals.userId);
                 if (!newPost){
                     response.status(500).json({message: "Post save failed for some reason, contact devs immediatly and get free air."});
                     return
@@ -153,7 +153,7 @@ export const PostController: PostControllerContract = {
                 }
             }
             try{
-                let newPostData = await PostService.updatePost(data, +id)
+                let newPostData = await PostService.updatePost(data, +id, response.locals.userId)
                 if (!newPostData){
                     response.status(404).json({message: `Post with id '${id}' not found.`})
                     return
@@ -182,9 +182,23 @@ export const PostController: PostControllerContract = {
                 response.status(400).json({message: validId});
                 return
             }
-            response.status(200).json(await PostService.deletePost(+id))
+            response.status(200).json(await PostService.deletePost(+id, response.locals.userId))
         }
         catch(error){
+            if (error instanceof Error){
+                if (error.message == "USER_NOT_FOUND"){
+                    response.status(403).json({message: "Invalid credentials, you dont exist."})
+                    return
+                }
+                if (error.message == "POST_NOT_FOUND"){
+                    response.status(404).json({message: "Post with this ID does not exists!"})
+                    return
+                }
+                if (error.message == "ACCESS_DENIED"){
+                    response.status(403).json({message: "Its not your post to edit!"})
+                    return
+                }
+            }
             console.log(`Seems like something if on fire in Post repository. Because deleting data is too hard comprehend, apparently.\n\nError:\n${error}`)
             response.status(500).json({message: "Server is experiencing problems."})
         }

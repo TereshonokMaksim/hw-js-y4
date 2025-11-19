@@ -34,7 +34,7 @@ export interface UserServiceContract {
 export interface UserControllerContract {
     login(request: Request<object, AuthResponse | ErrorResponse, LoginCredents>, response: Response<AuthResponse | ErrorResponse>): Promise<void>
     register(request: Request<object, AuthResponse | ErrorResponse, RegisterCredents>, response: Response<AuthResponse | ErrorResponse>): Promise<void>
-    me(request: Request<object, SafeUser | ErrorResponse>, response: Response<SafeUser | ErrorResponse>): Promise<void>
+    me(request: Request<object, SafeUser | ErrorResponse>, response: Response<SafeUser | ErrorResponse, {userId: number}>): Promise<void>
 }
 
 export interface UserRepositoryContract {
